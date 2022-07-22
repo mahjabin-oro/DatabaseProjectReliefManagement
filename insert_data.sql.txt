@@ -1,0 +1,75 @@
+-- 1.insert value in branch table
+INSERT INTO branch VALUES ( 101, 'Khulna', 2500000);
+INSERT INTO branch VALUES ( 102, 'Rajshahi', 3500000);
+INSERT INTO branch VALUES ( 103, 'Dhaka', 9500000);
+INSERT INTO branch VALUES ( 104, 'Barishal', 3000000);
+INSERT INTO branch VALUES ( 105, 'Sylhet', 4500000);
+
+
+-- 2.insert value in wards table
+INSERT INTO wards VALUES ( 09, 'Teligati', 4000, 101 );
+INSERT INTO wards VALUES ( 11, 'Kadirganj',3000,102 );
+INSERT INTO wards VALUES ( 21, 'Mopura',2000,104 );
+INSERT INTO wards VALUES ( 04, 'Mirpur',10000,103 );
+INSERT INTO wards VALUES ( 10, 'Volagonj',3500,105 );
+	
+-- 3.insert value in donor table
+INSERT INTO donor VALUES ( 201, 'Wadud', 'Rahman', 'Kadirganj' );
+INSERT INTO donor VALUES ( 202, 'Jahangir', 'Hossain', 'Patukhali' );
+INSERT INTO donor VALUES ( 203, 'Umme', 'Hafsah', 'Barishal' );
+INSERT INTO donor VALUES ( 204, 'Abdur', 'Rahim', 'Fulbarigate' );
+INSERT INTO donor VALUES ( 205, 'Fatema', 'Begum', 'Modupur' );
+INSERT INTO donor VALUES ( 206, 'Promiti', 'Biswas', 'Mirabazar' );
+	
+-- 4.insert value goods table
+INSERT INTO goods VALUES ( 301, 'Rice', 200.20 );
+INSERT INTO goods VALUES ( 302, 'Medicine', 300.00 );
+INSERT INTO goods VALUES ( 303, 'Saline', 100.00 );
+INSERT INTO goods VALUES ( 304, 'Lentil', 250 );
+INSERT INTO goods VALUES ( 305, 'Biscuit', 100.00 );
+INSERT INTO goods VALUES ( 306, 'Milk', 350.00 );
+
+-- 5.insert value in victim table
+INSERT INTO victim VALUES ( 40001, 'Jamila', 'Akhter', 10 );
+INSERT INTO victim VALUES ( 40002, 'Akbar', 'Mia', 21 );
+INSERT INTO victim VALUES ( 40003, 'Rahim', 'Ali', 04 );
+INSERT INTO victim VALUES	 ( 40004, 'Karim', 'Ali', 10 );
+INSERT INTO victim VALUES ( 40005, 'Nobin', 'Sheikh', 09 );
+
+-- 6.insert value in donation table
+
+INSERT INTO donation VALUES ( 50002, SYSDATE, 50.50, 301, 204);
+INSERT INTO donation VALUES ( 50003, SYSDATE, 150.00, 303, 203 );
+INSERT INTO donation VALUES ( 50004, SYSDATE, 200.00, 302, 201 );
+INSERT INTO donation VALUES ( 50005, SYSDATE, 10.00, 305, 202 );
+INSERT INTO donation VALUES ( 50006, SYSDATE, 10.00, 305, 202 );
+	
+	
+-- 7.insert value in Relief table
+
+INSERT INTO relief  VALUES ( 6001, TO_date( 'Jun-25,2022', 'Mon-DD,YYYY' ), 2.5, 40005, 301 );
+INSERT INTO relief  VALUES ( 6002, TO_date( 'Jun-23,2022', 'Mon-DD,YYYY' ), 2.0, 40001, 304);
+INSERT INTO relief  VALUES ( 6003, TO_date( 'Jun-22,2022', 'Mon-DD,YYYY' ), 5.0, 40002, 302);
+INSERT INTO relief  VALUES ( 6004, SYSDATE, 10.0, 40003, 301 );
+INSERT INTO relief  VALUES ( 6005, SYSDATE, 13.0, 40004, 303 );
+	
+	
+	
+-- 8.insert value in jobs table
+
+INSERT INTO job VALUES ( 'JRV701', 'Junior_Volunteer' );
+INSERT INTO job VALUES ( 'SRV702', 'Senior_Volunteer' );
+INSERT INTO job VALUES ( 'WC703', 'Ward_Coordinator' );
+INSERT INTO job VALUES ( 'BM704', 'Branch_Manager' );
+INSERT INTO job VALUES ( 'CEO705', 'CEO' );
+	
+	
+	
+-- 9.insert value in worker table
+
+INSERT INTO worker VALUES ( 801, 'Rahim', 'Hossain', 'KUET123', TO_date('Jun-01,2022','Mon-DD,YYYY'), 09, 'JRV701' );	
+INSERT INTO worker VALUES ( 802, 'Karim', 'Khan', 'KUET456', TO_date( 'Nov-20,2021', 'Mon-DD,YYYY' ), 11, 'JRV701' );
+INSERT INTO worker VALUES ( 803, 'Jamil', 'Uddin', 'AAA556', TO_date( 'Apr-21,2022', 'Mon-DD,YYYY' ), 10, 'WC703');
+INSERT INTO worker VALUES ( 804, 'Kamil', 'Rahman', 'PQR956', TO_date( 'Mar-22,2022', 'Mon-DD,YYYY' ), 11, 'SRV702' );
+	
+	

@@ -1,0 +1,163 @@
+set SERVEROUTPUT on
+
+
+dbms_output.put_line
+('For x=1:goods    For x=2:donation');
+dbms_output.put_line('System selected value: ' || x);
+if x=1 then
+    SELECT dbms_random.value(301,305) into z FROM dual;
+    dbms_output.put_line('Start From: ' || z || ' Results:');
+    if (z>300 and z<306) then
+--------------------------------------for loop in PL/SQL-----------------------------------------------------------
+        for y in z..304 loop
+            dbms_output.put_line(' '|| y || 'no.  DETAILS ARE:  ');
+            select goods_id into goods_id_goods from goods where goods_id=y;
+           select goods_name into goods_name_goods from goods where goods_id=y;
+            select quantity into quantity_goods from goods where goods_id=y;
+            dbms_output.put_line('GOOD Id : '|| goods_id_goods);
+            dbms_output.put_line('GOOD Name : '|| goods_name_goods);
+            dbms_output.put_line('QUANTITY : ' || quantity_goods);
+       end loop;
+   else
+       dbms_output.put_line('Invalid');
+   end if;
+elsif x=2 then
+    SELECT dbms_random.value(2,9) into z FROM dual;
+    dbms_output.put_line('Start From: ' || z || ' Results:');
+    if (z>2 and z<9) then
+       dbms_output.put_line('not necessary to know');
+    else 
+       dbms_output.put_line('invalid');
+    end if;
+end if;
+end;
+/
+
+--------------------------------- PLSQL-------------------------------
+SET SERVEROUTPUT ON
+DECLARE
+   Relief_Deliverded  relief.quantity%TYPE;
+BEGIN
+   SELECT SUM(quantity)  INTO  Relief_Deliverded FROM relief;
+   DBMS_OUTPUT.PUT_LINE('THE TOTAL RELIEF PROVIDED IS  : ' ||  Relief_Deliverded );
+ END;
+/
+
+
+SET SERVEROUTPUT ON
+DECLARE
+   MIN_GOOD  goods.quantity%TYPE;
+BEGIN
+   SELECT MIN(A.quantity) INTO MIN_GOOD   FROM goods A JOIN donation C USING(goods_id);   
+DBMS_OUTPUT.PUT_LINE('THE MINIMUM GOOD AMOUNT IS   : ' || MIN_GOOD);
+ END;
+/
+ --------------------------- return type function in pl/sql---------------------------
+
+SET SERVEROUTPUT ON
+ 
+    create or replace function stock(total_goods in number, relief_goods in number)    
+    return number    
+    is     
+    stock_goods number(8,2);    
+    begin    
+    stock_goods :=total_goods-relief_goods;    
+    return stock_goods;    
+    end;    
+    /    
+	
+	
+	DECLARE    
+   stock_goods number(5,2);
+   relief_goods number(5,2);   
+   total_goods number(5,2);   
+BEGIN    
+
+select  sum(quantity) into relief_goods from relief where product_id=301;
+select  sum(quantity) into total_goods from goods where goods_id=301;
+   stock_goods := stock(total_goods,relief_goods);    
+   dbms_output.put_line('stock is: ' || stock_goods);
+
+	if stock_goods>0 then
+		dbms_output.put_line('stock is available');
+	else
+		dbms_output.put_line('stock is unavailable');	
+	end if;
+END;    
+/  
+
+ 
+----------------------- increase goods using procedure---------------------------------
+
+CREATE OR REPLACE PROCEDURE total_goods(
+    available_goods_id IN number,
+    donate_goods IN NUMBER
+) IS
+BEGIN
+
+   UPDATE goods
+   SET quantity = quantity + donate_goods
+   WHERE goods_id = available_goods_id;
+END;
+/
+
+-- before adjustment
+SELECT quantity FROM goods WHERE goods_id = 301;
+-- call procedure
+exec total_goods(301,100);
+-- after adjustment
+SELECT quantity FROM goods WHERE goods_id = 301;
+
+
+
+
+
+
+--------------------------------------creating trigeer in PL/SQL-----------------------------------------------------------
+
+
+
+ CREATE OR REPLACE TRIGGER check_goods BEFORE INSERT OR UPDATE ON donation
+ FOR EACH ROW
+ DECLARE
+   c_min constant number(8,2) := 5.0;
+   c_max constant number(8,2) := 10.0;
+ BEGIN
+  IF :new.quantity > c_max OR :new.quantity < c_min THEN
+  RAISE_APPLICATION_ERROR(-20000,'New quntity is too small or large');
+END IF;
+ END;
+ /
+select * from goods;
+
+INSERT INTO donation
+VALUES( 50008, SYSDATE, 20.50, 301, 205);
+	--after insert
+select quantity from goods;
+
+UPDATE donation set quantity=10.9 where donation_id=50002;
+
+--------------------------------------create view-----------------------------------------------------------
+
+CREATE OR REPLACE VIEW donationdone AS SELECT  goods_id,goods_name
+ FROM goods C JOIN donation A USING(goods_id);
+
+select * from donationdone;
+
+--------------------------------------creating cursor in PL/SQL-----------------------------------------------------------
+SET SERVEROUTPUT ON
+DECLARE
+   CURSOR val   IS SELECT goods_id, goods_name  FROM goods;
+ valuewould val%ROWTYPE;
+BEGIN
+OPEN val;
+--------------------------------------normal loop in PL/SQL-----------------------------------------------------------
+  LOOP
+    FETCH val into valuewould;
+    EXIT WHEN  val %notfound;
+  DBMS_OUTPUT.PUT_LINE ('Goods ID :   ' || valuewould.goods_id || '  Goods name:        ' || valuewould.goods_name);
+  END LOOP;
+ CLOSE val;
+END;
+/
+

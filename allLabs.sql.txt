@@ -1,0 +1,242 @@
+--lab 02 and 03:
+
+-- data of each table
+Select * from branch;
+Select * from wards;
+Select * from donor;
+Select * from goods;
+Select * from victim;
+Select * from donation;
+Select * from relief;
+Select * from job;
+Select * from worker;
+
+--add operation (adding column)
+
+alter table job add temporary_column VARCHAR2(50);
+desc job;
+select * from job;
+
+--drop operation (dropping column)
+alter table job drop column temporary_column;
+desc job;
+select * from job;
+
+--modify operation (modifying column data type)
+alter table job modify job_id VARCHAR (60);
+desc job;
+select * from job;
+
+
+--rename operation (renaming column)
+alter table job rename column job_title to j_title;
+desc job;
+select * from job;
+
+
+--update operation (updating a value)
+update job set j_title= 'managing director' where job_id='CEO705';
+desc job;
+
+select * from job;
+
+
+--delete operation (deleting a row from tags table)
+delete from job where job_id='CEO705';
+desc job;
+select * from job;
+INSERT INTO job VALUES ( 'CEO705', 'CEO' );
+select * from job;
+
+--calculated field
+select (quantity*1.5) as updated_quantity_multiplied_by_1.5 from goods; --Giving the column a different name (from lab 04)
+
+--applying conditions
+select goods_name from goods where goods_id=303;
+
+--Range Search
+SELECT goods_id,goods_name FROM goods
+WHERE goods_id BETWEEN 301 AND 304;
+
+SELECT goods_id,goods_name FROM goods
+WHERE goods_id not BETWEEN 301 AND 304;
+
+--range operators
+SELECT goods_id,goods_name FROM goods
+WHERE goods_id >=301 AND goods_id<= 304; --Comparison Search Condition(from lab 04)
+
+SELECT goods_id,goods_name FROM goods
+WHERE goods_id >=301 OR goods_id<= 304;--Compound Comparison Search Condition(from lab 04)
+
+--Set membership
+SELECT goods_id,goods_name FROM goods
+WHERE goods_id IN (301 , 304);
+
+SELECT goods_id,goods_name FROM goods
+WHERE goods_id NOT IN (301 , 304);
+
+--Ordering by column values
+
+SELECT goods_id,goods_name FROM goods ORDER BY goods_id; --Single Column Ordering(lab 04)
+
+SELECT goods_id,goods_name FROM goods ORDER BY goods_id desc;
+
+
+--Ordering by column values(with multiple columns)
+select donation_id,donate_date,quantity from donation 
+order by donation_id,quantity; 
+--multi-column ordering(lab 04)
+
+--Use of DISTINCT
+select distinct (goods_id) from goods;
+
+
+
+
+--Lab 04:
+
+--Pattern Matching
+
+select job_id,j_title from job
+where j_title like '%Volunteer';
+
+
+--aggregate functions:
+select  max(quantity) from goods;
+
+select min(quantity) from goods;
+
+select  sum(quantity) from goods;
+
+select count(goods_id) from goods;
+
+select count(*) from goods;
+
+select count(distinct (goods_id)) from goods;
+
+select  avg(quantity) from goods;
+
+--select  avg(nvl(quantity)) from goods;
+
+
+
+
+
+
+
+
+--GROUP BY clause
+select count(donation_id),goods_id from donation group by goods_id;
+select count(donation_id),goods_id from donation where quantity >5 group by goods_id;
+
+
+
+
+
+--HAVING clause
+select count(donation_id),goods_id from donation  group by goods_id having goods_id>305;
+select count(donation_id),goods_id from donation  group by goods_id having count(goods_id)>1;
+
+
+
+--lab 05
+
+
+--IN
+select goods_id,goods_name,quantity from goods where goods_name in ('Rice','Milk');
+
+--nested query
+select first_name from victim where victim_ward in (select ward_no from wards where area_name='Volagonj');
+
+
+--set operations
+
+select goods_name,goods_id,quantity from goods where goods_id>300 and goods_id<305;
+
+--union operation
+select goods_id from goods where quantity<50
+union
+select goods_id from donation where donation_id<50004;
+
+
+--INTERSECT operation
+
+select goods_id from goods
+intersect
+select goods_id from donation where donation_id<50004;
+
+--MINUS operation
+select goods_id from goods
+minus
+select goods_id from donation ;
+----nested query---
+select goods_id,goods_name,quantity from goods where goods_id IN( select goods_id from donation where donation_id=50002);
+
+
+
+--lab 06(Joining multiple tables)
+
+
+--Join
+
+
+select j.job_id, j.j_title,w.first_name,w.last_name,w.join_date from job j join
+worker w on j.job_id=w.job_id;
+
+
+--Natural Join
+
+select job_id,j_title from job natural join worker;
+
+
+--Cross Joins/ Cartesian Products
+
+select j.job_id, j.j_title,w.first_name,w.last_name,w.join_date from job j cross join
+worker w;
+
+
+--Inner Join
+
+select j.job_id, j.j_title,w.first_name,w.last_name,w.join_date from job j inner join
+worker w on j.job_id=w.job_id;
+
+
+--Outer Join
+
+--LEFT Outer Join
+select j.job_id, j.j_title,w.first_name,w.last_name,w.join_date from job j LEFT outer join
+worker w on j.job_id=w.job_id;
+
+--RIGHT Outer Join
+select j.job_id, j.j_title,w.first_name,w.last_name,w.join_date from job j RIGHT outer join
+worker w on j.job_id=w.job_id;
+
+--FULL Outer Join
+select j.job_id, j.j_title,w.first_name,w.last_name,w.join_date from job j FULL outer join
+worker w on j.job_id=w.job_id;
+
+--Self Join
+--(max job_id)
+
+
+select j.job_id from job j MINUS
+select j.job_id from job j join job q on j.job_id<q.job_id;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

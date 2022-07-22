@@ -1,0 +1,70 @@
+------showing the current user name
+show user; 
+
+
+
+drop table basic_table;
+declare
+   a int;
+begin
+   select count(*) into a from user_tables where table_name = upper('basic_table');
+EXCEPTION
+    WHEN no_data_found THEN
+        a := 0;
+if (a = 1) then
+      execute immediate q'[drop table basic_table]'; -- executing the command drop table
+end if;
+end;
+/
+
+create table basic_table (
+  d_roll integer,
+  d_mark integer
+);
+
+
+-------------proper example of how the transaction actually works for a single user
+
+insert into basic_table values (1,90);
+
+insert into basic_table values (2,95);
+commit;
+insert into basic_table values (3,84);
+SAVEPOINT x_save;
+insert into basic_table values (4,75);
+
+insert into basic_table values (5,86);
+
+SAVEPOINT y_save;
+insert into basic_table values (6,97);
+
+select * from basic_table;
+rollback to x_save;
+select *from basic_table;
+delete from basic_table;
+select *from basic_table;
+rollback;
+
+
+
+drop table dummy;
+create table dummy (
+emp_name varchar(20),
+ joining date
+);
+insert into dummy values ('wahida',TO_DATE('17-JUN-1987', 'dd-MON-yyyy')); 
+select LAST_DAY (joining) from dummy;
+
+SELECT emp_name, EXTRACT(Month FROM joining) AS Month
+FROM dummy;
+
+
+select sysdate from dual;
+select current_date from dual;
+select systimestamp from dual;
+
+SELECT LEAST (TO_DATE ('22-DEC-2007'),TO_DATE ('12-DEC-2008'))
+FROM dual;
+SELECT GREATEST (TO_DATE ('22-DEC-2007'),TO_DATE ('12-DEC2008')) 
+from dual;
+

@@ -1,0 +1,93 @@
+DROP TABLE worker;
+DROP TABLE job;
+DROP TABLE relief;
+DROP TABLE donation;
+DROP TABLE victim;
+DROP TABLE goods;
+DROP TABLE donor;
+DROP TABLE wards;
+DROP TABLE branch;
+
+--01.table for branch information
+CREATE TABLE branch (
+	Branch_no NUMBER ( 10 ) NOT NULL,
+	District VARCHAR ( 20),
+	population NUMBER ( 10 ),
+            primary key ( Branch_no ));
+
+--02.table for wards information
+CREATE TABLE wards (
+	ward_no NUMBER ( 10 ) NOT NULL,
+	area_name VARCHAR ( 10 ),
+	population NUMBER ( 10 ),
+	Branch_no NUMBER ( 10 ),
+            primary key (ward_no ),
+            FOREIGN KEY (Branch_no) REFERENCES branch (Branch_no) ON DELETE CASCADE);
+
+--03.table for donor information
+CREATE TABLE donor (
+	donor_id NUMBER ( 10 ) NOT NULL,
+	first_Name VARCHAR ( 10 ),
+	last_Name VARCHAR ( 10 ),
+	address VARCHAR ( 20 ),
+	primary key ( donor_id ));
+
+--04.table for goods information
+CREATE TABLE goods (
+	goods_id NUMBER ( 10 ) NOT NULL,
+	goods_name VARCHAR ( 10 ),
+	quantity NUMBER ( 10, 2 ),
+            primary key ( goods_id ));
+
+--05.table for victim information
+CREATE TABLE victim (
+	victim_id NUMBER ( 10 ) NOT NULL,
+	first_Name VARCHAR ( 10 ),
+	last_Name VARCHAR ( 10 ),
+	victim_ward NUMBER ( 10 ),
+	primary key (victim_id),
+            FOREIGN KEY (victim_ward) REFERENCES wards (ward_no) ON DELETE CASCADE);
+
+
+
+-- 06.table for donation information
+CREATE TABLE donation (
+	donation_id NUMBER ( 10 ) NOT NULL,
+	donate_date DATE,
+	quantity NUMBER ( 6, 2 ) ,
+	goods_id NUMBER ( 10 ),
+	donor_id NUMBER ( 10 ),
+	primary key ( donation_id ),
+            FOREIGN KEY (goods_id) REFERENCES goods (goods_id) ON DELETE CASCADE,
+            FOREIGN KEY (donor_id) REFERENCES donor (donor_id) ON DELETE CASCADE );
+
+--07.table for relief information
+CREATE TABLE relief (
+	relief_id VARCHAR ( 10 ) NOT NULL,
+	r_date DATE,
+	quantity NUMBER ( 10,2 ),
+	receiver_id NUMBER ( 10 ),
+	product_id number,
+            primary key ( relief_id ),
+	foreign key ( product_id ) references goods ( goods_id ) ON DELETE cascade,
+	foreign key ( receiver_id ) references victim ( victim_id ) ON DELETE cascade );
+
+--08.table for job(volunteer) information
+CREATE TABLE job (
+	job_id varchar ( 10 ) NOT NULL,
+	job_title VARCHAR ( 20 ),
+            primary key ( job_id ));
+
+--09.table for Emergency Worker information
+CREATE TABLE worker (
+	w_id NUMBER ( 10 ) NOT NULL,
+	first_Name VARCHAR ( 10 ),
+	last_Name VARCHAR ( 10 ),
+	password VARCHAR ( 10 ),
+	join_date DATE,
+	address_as_ward NUMBER ( 10 ),
+	job_id varchar ( 10 ),
+	primary key ( w_id ),
+	foreign key ( address_as_ward ) references wards ( ward_no ) ON DELETE cascade,
+            foreign key ( job_id ) references job ( job_id ) ON DELETE cascade 
+);
